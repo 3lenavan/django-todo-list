@@ -1,11 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Title shown on the browser tab -->
     <title>To-Do List</title>
+
+    <!-- Simple CSS styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .add-form {
+        text-align: center;
+        }
+
+        form {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            width: 250px;
+        }
+
+        button {
+            padding: 8px 12px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .delete {
+            margin-left: auto;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+    </style>
 </head>
+ 
 <body>
 
+    <!-- Main heading for the page -->
     <h1>My To-Do List</h1>
+
+    <!-- Form for adding a new task -->
+    <form method="POST" class="add-form">
+        {% csrf_token %}
+
+        <!-- Text box for the task title -->
+        <input type="text" name="title" placeholder="Enter a task">
+
+        <!-- Button to submit the task -->
+        <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Loop through each task from the database -->
+    {% for task in tasks %}
+
+        <div class="task">
+
+            <!-- Form for marking a task as complete -->
+            <form method="POST" action="{% url 'complete_task' task.id %}">
+                {% csrf_token %}
+
+                <!-- Checkbox for completed status -->
+                <input
+                    type="checkbox"
+                    onchange="this.form.submit()"
+                    {% if task.completed %}checked{% endif %}
+                >
+            </form>
+
+            <!-- Cross out task if completed -->
+            {% if task.completed %}
+                <s>{{ task.title }}</s>
+            {% else %}
+                {{ task.title }}
+            {% endif %}
+
+            <!-- Delete the task -->
+            <a class="delete" href="{% url 'delete_task' task.id %}">
+                ✕
+            </a>
+
+        </div>
+
+    {% endfor %}
 
 </body>
 </html>

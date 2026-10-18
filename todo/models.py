@@ -11,9 +11,10 @@ class Task(models.Model):
     # False means not completed yet
     completed = models.BooleanField(default=False)
 
+    # Stores the date and time when the task was created
+    created_at = models.DateTimeField(auto_now_add=True)
+
     # Controls how the task is displayed
     # It will show the task's title
     def __str__(self):
         return self.title
-    
-# Create your models here.
